@@ -1,6 +1,7 @@
 ﻿namespace Sudoku.Core.Pieces
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.CompilerServices;
 
     public class Cell
@@ -39,13 +40,8 @@
         public void RemovePotential(int value)
         {
             this.potentials.Remove(value);
-        }
-
-        public override string ToString()
-        {
-            return (this.OnePossibility)
-                ? "X"
-                : this.value.GetValueOrDefault(0).ToString().Replace('0', ' ');
+            if (this.OnePossibility)
+                this.value = this.potentials.Possible.First();
         }
     }
 }

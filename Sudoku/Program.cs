@@ -6,6 +6,7 @@ namespace Sudoku
 
     using Sudoku.Core;
     using Sudoku.Core.Pieces;
+    using Sudoku.Printer;
 
     class Program
     {
@@ -17,6 +18,9 @@ namespace Sudoku
             printer.Print(board);
             var solver = new Solver();
             board = solver.SetPossibles(board);
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
             printer.Print(board);
         }
 
@@ -69,41 +73,6 @@ namespace Sudoku
                     new Placement(8, 4, 7),
                     new Placement(8, 5, 4)
                 };
-        }
-    }
-
-    public class Solver
-    {
-        public GameBoard Solve(GameBoard board)
-        {
-            board = this.SetPossibles(board);
-            return board;
-        }
-
-        public GameBoard SetPossibles(GameBoard board)
-        {
-            foreach (var row in board.Rows)
-            {
-                if (row.HasValue)
-                    foreach (var cell in row.Cells.Where(c => c.HasValue))
-                        row.RemovePotentials(cell.Value);
-            }
-
-            foreach (var column in board.Columns)
-            {
-                if (column.HasValue)
-                    foreach (var cell in column.Cells.Where(c => c.HasValue))
-                        column.RemovePotentials(cell.Value);
-            }
-
-            foreach (var subGrid in board.SubGrids)
-            {
-                if (subGrid.HasValue)
-                    subGrid.ValuesSet.ForEach(v => subGrid.RemovePotentials(v));
-            }
-
-
-            return board;
         }
     }
 }

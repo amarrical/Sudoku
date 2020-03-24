@@ -33,6 +33,16 @@
             set => this.SetCell(row, column, value);
         }
 
+        public List<Cell> Cells
+        {
+            get
+            {
+                var cells = new List<Cell>();
+                this.Rows.ToList().ForEach(r => cells.AddRange(r.Cells));
+                return cells;
+            }
+        }
+
         private void LoadContents()
         {
             for (var row = 0; row < 9; row++)
