@@ -32,6 +32,9 @@
             lines.AddRange(this.rowPrinter.Print(board.Rows[7]));
             lines.AddRange(this.rowPrinter.Print(board.Rows[8]));
 
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
             lines.ToList().ForEach(Console.WriteLine);
         }
     }

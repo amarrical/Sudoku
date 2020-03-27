@@ -2,11 +2,13 @@
 {
     using System.Linq;
 
+    using ARM.Extensions;
+
     public abstract class LineContainer
     {
         public abstract Cell[] Cells { get; }
 
-        public bool HasValue => this.Cells.Any(c => c.HasValue);
+        public bool HasValue => this.Cells.Any(c => c.Set);
 
         public Cell this[int key]
         {
@@ -19,8 +21,7 @@
             if (!value.HasValue)
                 return;
 
-            foreach (var cell in this.Cells)
-                cell.RemovePotential(value.Value);
+            this.Cells.ForEach(_ => _.RemovePotential(value.Value));
         }
     }
 }

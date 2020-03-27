@@ -1,17 +1,16 @@
 ﻿namespace Sudoku.Core.Pieces
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
 
     public class Cell
     {
         private int? value;
 
-        private PotentialValues potentials = new PotentialValues();
+        private PotentialValues potentials;
 
         public Cell()
         {
+            this.potentials = new PotentialValues();
         }
 
         public Cell(int value)
@@ -28,10 +27,8 @@
         public int? Value
         {
             get => this.value;
-            set => this.value = (this.GameFixed) ? this.value : value;
+            set => this.SetValue(value);
         }
-
-        public bool HasValue => this.value.HasValue;
 
         public List<int> PotentialValues => this.potentials.Possible;
 
@@ -40,8 +37,15 @@
         public void RemovePotential(int value)
         {
             this.potentials.Remove(value);
-            if (this.OnePossibility)
-                this.value = this.potentials.Possible.First();
+        }
+
+        private void SetValue(int? value)
+        {
+            if (this.GameFixed)
+                return;
+
+            this.value = value;
+            this.potentials = new EmptyPotentialValues();
         }
     }
 }

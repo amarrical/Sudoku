@@ -5,14 +5,16 @@
 
     public class GameBoard
     {
-        private readonly Cell[,] contents = new Cell[9, 9];
+        private readonly List<List<Cell>> contents = SudokuFactory.BuildDouble<Cell>(9);
+
+        private readonly List<List<SubGrid>> subGrids = SudokuFactory.BuildDouble<SubGrid>();
 
         public GameBoard()
         {
-            this.Rows = SudokuFactory.BuildSingle<Row>();
-            this.Columns = SudokuFactory.BuildSingle<Column>();
-            this.SubGrids = SudokuFactory.BuildDouble<SubGrid>();
-            this.LoadContents();
+            this.Rows = SudokuFactory.BuildSingle<Row>().ToList();
+            this.Columns = SudokuFactory.BuildSingle<Column>().ToList();
+            this.subGrids = SudokuFactory.BuildDouble<SubGrid>();
+            this.AlignCollections();
         }
 
         public GameBoard(IEnumerable<Placement> initialValues)
@@ -21,15 +23,15 @@
             initialValues.ToList().ForEach(p => this[p.Row, p.Column] = new Cell(p.Value));
         }
 
-        public Row[] Rows { get; }
+        public List<Row> Rows { get; }
 
-        public Column[] Columns { get; }
+        public List<Column> Columns { get; }
 
-        public SubGrid[,] SubGrids { get; }
+        public List<SubGrid> SubGrids => this.subGrids.SelectMany(_ => _).ToList();
 
         public Cell this[int row, int column]
         {
-            get => this.contents[row, column];
+            get => this.contents[row][column];
             set => this.SetCell(row, column, value);
         }
 
@@ -43,19 +45,19 @@
             }
         }
 
-        private void LoadContents()
+        private void AlignCollections()
         {
             for (var row = 0; row < 9; row++)
                 for (var column = 0; column < 9; column++)
-                    this[row, column] = new Cell();
+                    this.SetCell(row, column, this[row, column]);
         }
 
         private void SetCell(int row, int column, Cell cell)
         {
-            this.contents[row, column] = cell;
+            this.contents[row][column] = cell;
             this.Rows[row][column] = cell;
             this.Columns[column][row] = cell;
-            this.SubGrids[row / 3, column / 3][row % 3, column % 3] = cell;
+            this.subGrids[row / 3][column / 3][row % 3, column % 3] = cell;
         }
     }
 }
